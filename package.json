@@ -1,0 +1,37 @@
+{
+  "name": "kunang-kunang",
+  "version": "1.0.0",
+  "description": "Kunang-Kunang - Discord music bot with TikTok live integration, built with discord.js v14 and discord-player v7.1.x",
+  "main": "src/index.js",
+  "scripts": {
+    "start": "node src/index.js",
+    "dev": "nodemon src/index.js"
+  },
+  "keywords": [
+    "kunang-kunang",
+    "discord",
+    "music",
+    "bot",
+    "discord-player",
+    "tiktok",
+    "live-chat",
+    "music-bot",
+    "soundcloud",
+    "cross-platform"
+  ],
+  "dependencies": {
+    "@discord-player/extractor": "^7.1.0",
+    "chalk": "^4.1.2",
+    "discord-player": "^7.1.0",
+    "discord.js": "^14.14.1",
+    "dotenv": "^16.3.1",
+    "soundcloud.ts": "^0.7.0",
+    "tiktok-live-connector": "^2.1.0"
+  },
+  "devDependencies": {
+    "nodemon": "^3.0.2"
+  },
+  "engines": {
+    "node": ">=18.0.0"
+  }
+}
