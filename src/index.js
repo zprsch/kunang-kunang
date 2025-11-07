@@ -1,6 +1,5 @@
 const { Client, GatewayIntentBits, Collection } = require('discord.js');
 const { Player } = require('discord-player');
-const { AttachmentExtractor } = require('@discord-player/extractor');
 const { SoundCloudExtractor } = require('./extractors/SoundCloudExtractor');
 const TikTokBridge = require('./utils/TikTokBridge');
 const config = require('./config');
@@ -37,11 +36,11 @@ class MusicBot {
     }
 
     async init() {
-        // Load attachment extractor for local file support
-        await this.player.extractors.register(AttachmentExtractor, {});
         
-        // Load custom extractor from extractor folder
         await this.player.extractors.register(SoundCloudExtractor, {});
+
+        const extractors = Array.from(this.player.extractors.store.keys());
+        console.log(chalk.yellow('Extractors registered:\n' + extractors.join('\n')));
         
         this.loadCommands();
         this.loadEvents();
