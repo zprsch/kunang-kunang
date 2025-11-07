@@ -5,7 +5,12 @@
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
-    "dev": "nodemon src/index.js"
+    "dev": "nodemon src/index.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Kiznaiverr/kunang-kunang.git"
   },
   "keywords": [
     "kunang-kunang",
@@ -17,8 +22,16 @@
     "live-chat",
     "music-bot",
     "soundcloud",
-    "cross-platform"
+    "cross-platform",
+    "discord.js",
+    "nodejs"
   ],
+  "author": "Kiznaiverr",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Kiznaiverr/kunang-kunang/issues"
+  },
+  "homepage": "https://github.com/Kiznaiverr/kunang-kunang#readme",
   "dependencies": {
     "@discord-player/extractor": "^7.1.0",
     "chalk": "^4.1.2",
