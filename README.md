@@ -100,29 +100,7 @@ TIKTOK_USERNAME=tiktok_username_for_live_chat
    SOUNDCLOUD_OAUTH_TOKEN=your_oauth_token_here
    ```
 
-4. **Bot Configuration**
-Edit `src/config.js` to customize settings:
-```javascript
-module.exports = {
-    bot: {
-        prefix: '!',
-        activity: {
-            name: 'music',
-            type: 2 // LISTENING
-        }
-    },
-    player: {
-        defaultVolume: 100,
-        defaultSearchEngine: 'soundcloud',
-        leaveOnEmpty: true,
-        leaveOnEmptyCooldown: 300000, // 5 minutes
-        leaveOnEnd: true,
-        leaveOnEndCooldown: 300000
-    }
-}
-```
-
-5. **Start the bot**
+4. **Start the bot**
 ```bash
 npm start
 # or
@@ -151,11 +129,6 @@ node src/index.js
 | `!tiktok disconnect` | - | Disconnect TikTok bridge |
 | `!tiktok reconnect` | - | Reconnect TikTok bridge |
 
-### Configuration Commands
-| Command | Aliases | Description |
-|---------|---------|-------------|
-| `!config` | `!cfg` | Show bot configuration |
-
 ## Configuration
 
 ### Bot Settings (`src/config.js`)
@@ -166,7 +139,7 @@ module.exports = {
     bot: {
         prefix: '!',                    // Command prefix
         activity: {
-            name: 'music',              // Bot activity text
+            name: 'Kunang-Kunang Music', // Bot activity text
             type: 2                     // Activity type (LISTENING)
         }
     },
@@ -175,11 +148,28 @@ module.exports = {
     player: {
         defaultVolume: 100,             // Default volume (1-100)
         defaultSearchEngine: 'soundcloud', // youtube, soundcloud, spotify
-        maxQueueSize: 100,              // Maximum songs in queue
-        leaveOnEmpty: true,             // Leave when voice channel empty
-        leaveOnEmptyCooldown: 300000,   // Wait time before leaving (ms)
-        leaveOnEnd: true,               // Leave when queue ends
-        leaveOnEndCooldown: 300000      // Wait time after queue ends (ms)
+        maxQueueSize: 100,              // Maximum songs in queue        
+        selfDeaf: true,                 // Bot deafens itself in voice channels
+        volume: 100,                    // Default volume (0-100)
+        quality: 'high',                // Audio quality: low, medium, high
+        
+        // Leave options for voice channel
+        leaveOptions: {
+            leaveOnEnd: true,          // Leave after queue finishes
+            leaveOnEndCooldown: 300000,  // 5 minutes
+            leaveOnEmpty: true,        // Leave when voice channel is empty
+            leaveOnEmptyCooldown: 300000, // 5 minutes
+            leaveOnStop: true,         // Leave when player is stopped
+            leaveOnStopCooldown: 300000   // 5 minutes
+        }
+    },
+    
+    // TikTok integration settings
+    tiktok: {
+        username: '',                   // TikTok username for live integration
+        maxReconnectAttempts: 3,        // Max reconnection attempts
+        reconnectDelay: 5000,           // Delay between reconnection attempts (ms)
+        enabled: false                  // Enable/disable TikTok integration
     }
 }
 ```
@@ -196,10 +186,6 @@ DISCORD_VOICE_CHANNEL_ID=your_voice_channel_id_here
 SOUNDCLOUD_CLIENT_ID=your_soundcloud_client_id
 SOUNDCLOUD_OAUTH_TOKEN=your_soundcloud_oauth_token
 
-# TikTok Integration (Optional)
-TIKTOK_USERNAME=tiktok_username_for_live_chat
-```
-
 ## Project Structure
 
 ```
@@ -210,12 +196,19 @@ src/
 │   ├── nowplaying.js  # Now playing display
 │   ├── skip.js        # Skip track
 │   ├── pause.js       # Pause/resume
+│   ├── resume.js      # Resume playback
 │   ├── stop.js        # Stop music
 │   ├── volume.js      # Volume control
-│   ├── tiktok-stats.js # TikTok bridge monitoring
-│   └── config-info.js # Configuration display
+│   ├── shuffle.js     # Shuffle queue
+│   ├── leave.js       # Leave voice channel
+│   └── tiktok-stats.js # TikTok bridge monitoring
 ├── events/            # Event handlers
-│   └── discordEvents.js # Discord and player events
+│   ├── discord/
+│   │   ├── index.js       # Discord events registration
+│   │   ├── clientEvents.js # Client events (ready, message)
+│   │   ├── playerEvents.js # Player events (track start, queue, etc.)
+│   │   └── errorEvents.js  # Error and disconnect events
+│   └── discordEvents.js # Legacy event handler (deprecated)
 ├── extractors/        # Custom music extractors
 │   └── SoundCloudExtractor.js # SoundCloud support
 ├── utils/             # Utility modules

@@ -74,8 +74,16 @@ module.exports = {
             }
         });
 
-        // Queue end event - when all songs finish
-        bot.player.events.on('queueEnd', (queue) => {
+        // Additional logging events
+        bot.player.events.on('audioTrackAdd', (queue, track) => {
+            console.log(chalk.blue(`Track added: ${track.title}`));
+        });
+
+        bot.player.events.on('emptyChannel', (queue) => {
+            console.log(chalk.yellow('Voice channel is empty'));
+        });
+
+        bot.player.events.on('emptyQueue', (queue) => {
             if (queue.metadata) {
                 const embed = {
                     color: 0xffff00,
@@ -88,23 +96,6 @@ module.exports = {
                 };
                 queue.metadata.reply({ embeds: [embed] });
             }
-        });
-
-        // Channel empty event - when voice channel becomes empty
-        bot.player.events.on('channelEmpty', (queue) => {
-            console.log(chalk.yellow('Voice channel is empty, starting idle timer'));
-        });
-
-        // Additional logging events
-        bot.player.events.on('audioTrackAdd', (queue, track) => {
-            console.log(chalk.blue(`Track added: ${track.title}`));
-        });
-
-        bot.player.events.on('emptyChannel', (queue) => {
-            console.log(chalk.yellow('Voice channel is empty'));
-        });
-
-        bot.player.events.on('emptyQueue', (queue) => {
             console.log(chalk.yellow('Queue is empty'));
         });
     }

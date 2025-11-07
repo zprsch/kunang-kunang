@@ -53,7 +53,8 @@ module.exports = {
 
             const { track } = await player.play(message.member.voice.channel, searchResult, {
                 nodeOptions: {
-                    metadata: message
+                    metadata: message,
+                    ...config.player.leaveOptions
                 }
             });
 

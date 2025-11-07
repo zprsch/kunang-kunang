@@ -1,5 +1,4 @@
 module.exports = {
-    // Bot settings
     bot: {
         prefix: '!',
         activity: {
@@ -10,12 +9,20 @@ module.exports = {
     
     player: {
         defaultVolume: 100,
-        defaultSearchEngine: 'soundcloud', // youtube, soundcloud, spotify
+        defaultSearchEngine: 'soundcloud', 
         maxQueueSize: 100,
+        selfDeaf: true, 
+        volume: 100, 
+        quality: 'high', 
         
-        selfDeaf: true, // Bot will deafen itself when joining voice channels
-        volume: 100, // Default volume (0-100)
-        quality: 'high' // low, medium, high
+        leaveOptions: {
+            leaveOnEnd: true,        
+            leaveOnEndCooldown: 300000, 
+            leaveOnEmpty: true, 
+            leaveOnEmptyCooldown: 300000,
+            leaveOnStop: true,      
+            leaveOnStopCooldown: 300000 
+        }
     },
     
     tiktok: {
