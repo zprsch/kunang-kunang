@@ -281,25 +281,9 @@ bot.player.events.on('eventName', (queue, data) => {
 ### Planned Features
 
 - [ ] **Add Spotify source integration**
-  - Implement Spotify API for music search and playback
-  - Support for Spotify playlists and albums
-  - Direct Spotify URL support
-
 - [ ] **Add Apple Music source integration**
-  - Implement Apple Music API integration
-  - Support for Apple Music playlists
-  - Cross-platform music discovery
-
 - [ ] **Add YouTube Music source integration**
-  - Enhanced YouTube Music search capabilities
-  - Better audio quality for YouTube Music tracks
-  - Playlist and mix support
-
 - [ ] **Make TikTok chat assistant**
-  - Display command responses in TikTok live chat
-  - Real-time feedback for TikTok viewers
-  - Enhanced cross-platform interaction
-  - Visual indicators for successful commands
 
 ### Future Enhancements
 
