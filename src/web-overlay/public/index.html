@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kunang-Kunang Music Overlay</title>
+    <link rel="stylesheet" href="css/overlay.css">
+</head>
+<body>
+    <div id="overlay" class="overlay-container">
+        <!-- Now Playing Section -->
+        <div id="now-playing" class="now-playing">
+            <div class="section-header">
+                <span class="status-indicator" id="status-indicator"></span>
+                Now Playing
+            </div>
+            <div id="current-track" class="current-track">
+                <div class="track-info">
+                    <div id="track-title" class="track-title">Loading...</div>
+                    <div id="track-author" class="track-author">Please wait</div>
+                </div>
+                <div id="track-thumbnail" class="track-thumbnail">
+                    <img id="thumbnail-img" src="" alt="Album Art" style="display: none;">
+                </div>
+            </div>
+        </div>
+
+        <!-- Up Next Section -->
+        <div id="up-next" class="up-next">
+            <div class="section-header">Up Next</div>
+            <div id="queue-list" class="queue-list">
+                <div class="queue-item empty">No songs in queue</div>
+            </div>
+        </div>
+
+        <!-- Status Info -->
+        <div id="status-info" class="status-info">
+            <div id="last-update" class="last-update">Last update: Never</div>
+            <div id="connection-status" class="connection-status">Connecting...</div>
+        </div>
+    </div>
+
+    <script src="js/overlay.js"></script>
+</body>
+</html>

@@ -3,7 +3,7 @@ const chalk = require('chalk');
 module.exports = {
     registerPlayerEvents(client, bot) {
         // Track start event - when a song starts playing
-        bot.player.events.on('trackStart', (queue, track) => {
+        bot.player.events.on('playerStart', (queue, track) => {
             if (queue.metadata) {
                 const embed = {
                     color: 0x2f3136,
@@ -35,10 +35,16 @@ module.exports = {
                 };
                 queue.metadata.reply({ embeds: [embed] });
             }
+
+            // Update overlay
+            if (bot.overlayServer) {
+                console.log(chalk.blue('Updating overlay with track start'));
+                bot.overlayServer.updateStatus(track, queue);
+            }
         });
 
         // Track add event - when a song is added to queue
-        bot.player.events.on('trackAdd', (queue, track) => {
+        bot.player.events.on('audioTrackAdd', (queue, track) => {
             // Only show "Added to Queue" if there are already tracks playing/in queue
             // This prevents duplicate messages when using the play command
             if (queue.metadata && queue.tracks.size > 0) {
@@ -72,6 +78,12 @@ module.exports = {
                 };
                 queue.metadata.reply({ embeds: [embed] });
             }
+
+            // Update overlay queue
+            if (bot.overlayServer) {
+                const currentTrack = queue.currentTrack;
+                bot.overlayServer.updateStatus(currentTrack, queue);
+            }
         });
 
         // Additional logging events
@@ -83,7 +95,7 @@ module.exports = {
             console.log(chalk.yellow('Voice channel is empty'));
         });
 
-        bot.player.events.on('emptyQueue', (queue) => {
+        bot.player.events.on('queueFinish', (queue) => {
             if (queue.metadata) {
                 const embed = {
                     color: 0xffff00,
@@ -96,6 +108,13 @@ module.exports = {
                 };
                 queue.metadata.reply({ embeds: [embed] });
             }
+
+            // Update overlay - no more tracks
+            if (bot.overlayServer) {
+                console.log(chalk.blue('Updating overlay with queue finish'));
+                bot.overlayServer.updateStatus(null, queue);
+            }
+
             console.log(chalk.yellow('Queue is empty'));
         });
     }

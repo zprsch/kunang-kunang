@@ -1,0 +1,222 @@
+/* Kunang-Kunang Music Overlay Styles */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background: transparent;
+    color: #ffffff;
+    overflow: hidden;
+    user-select: none;
+}
+
+/* Main Container */
+.overlay-container {
+    padding: 20px;
+    min-width: 350px;
+    max-width: 500px;
+    background: rgba(0, 0, 0, 0.85);
+    border-radius: 12px;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+}
+
+/* Section Headers */
+.section-header {
+    font-size: 14px;
+    font-weight: 600;
+    color: #ff6b6b;
+    margin-bottom: 12px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+
+.status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: #666;
+    display: inline-block;
+}
+
+.status-indicator.playing {
+    background: #4CAF50;
+    box-shadow: 0 0 6px rgba(76, 175, 80, 0.6);
+}
+
+.status-indicator.paused {
+    background: #ff9800;
+}
+
+/* Now Playing Section */
+.now-playing {
+    margin-bottom: 20px;
+}
+
+.current-track {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.track-info {
+    flex: 1;
+    min-width: 0;
+}
+
+.track-title {
+    font-size: 18px;
+    font-weight: 700;
+    margin-bottom: 4px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #ffffff;
+}
+
+.track-author {
+    font-size: 14px;
+    color: #cccccc;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.track-thumbnail {
+    width: 60px;
+    height: 60px;
+    border-radius: 8px;
+    overflow: hidden;
+    background: rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+}
+
+#thumbnail-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+/* Up Next Section */
+.up-next {
+    margin-bottom: 15px;
+}
+
+.queue-list {
+    max-height: 120px;
+    overflow-y: auto;
+}
+
+.queue-item {
+    padding: 8px 15px;
+    margin-bottom: 4px;
+    background: rgba(255, 255, 255, 0.03);
+    border-radius: 6px;
+    border-left: 3px solid #ff6b6b;
+    font-size: 13px;
+    line-height: 1.4;
+}
+
+.queue-item:last-child {
+    margin-bottom: 0;
+}
+
+.queue-item.empty {
+    color: #888;
+    font-style: italic;
+    border-left-color: #666;
+}
+
+.queue-item .title {
+    font-weight: 600;
+    color: #ffffff;
+}
+
+.queue-item .author {
+    color: #cccccc;
+    font-size: 12px;
+}
+
+/* Status Info */
+.status-info {
+    font-size: 11px;
+    color: #888;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    padding-top: 10px;
+    display: flex;
+    justify-content: space-between;
+}
+
+.last-update, .connection-status {
+    font-size: 10px;
+}
+
+/* Animations */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(10px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.overlay-container {
+    animation: fadeIn 0.3s ease-out;
+}
+
+.status-indicator {
+    transition: all 0.3s ease;
+}
+
+/* Scrollbar Styling */
+.queue-list::-webkit-scrollbar {
+    width: 4px;
+}
+
+.queue-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 2px;
+}
+
+.queue-list::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.queue-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+/* Responsive */
+@media (max-width: 400px) {
+    .overlay-container {
+        padding: 15px;
+        min-width: 300px;
+    }
+
+    .current-track {
+        padding: 12px;
+        gap: 12px;
+    }
+
+    .track-title {
+        font-size: 16px;
+    }
+
+    .track-thumbnail {
+        width: 50px;
+        height: 50px;
+    }
+}

@@ -2,12 +2,6 @@ const chalk = require('chalk');
 
 module.exports = {
     registerClientEvents(client, bot) {
-        // Bot ready event
-        client.once('clientReady', () => {
-            console.log(chalk.green(`Logged in as ${client.user.tag}`));
-            console.log(chalk.green(`Bot is ready! Serving ${client.guilds.cache.size} server`));
-        });
-
         // Message command handling
         client.on('messageCreate', (message) => {
             if (!message.content.startsWith(bot.prefix) || message.author.bot) return;

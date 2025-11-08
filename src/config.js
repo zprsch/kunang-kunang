@@ -29,5 +29,13 @@ module.exports = {
         maxReconnectAttempts: 3,
         reconnectDelay: 5000, 
         enabled: false 
+    },
+
+    overlay: {
+        enabled: true,
+        port: 3000,
+        pollingInterval: 1000, 
+        maxQueueDisplay: 3,     
+        theme: 'light'          
     }
 };
