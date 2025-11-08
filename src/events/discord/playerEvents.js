@@ -43,42 +43,8 @@ module.exports = {
             }
         });
 
-        // Track add event - when a song is added to queue
+        // Track add event
         bot.player.events.on('audioTrackAdd', (queue, track) => {
-            // Only show "Added to Queue" if there are already tracks playing/in queue
-            // This prevents duplicate messages when using the play command
-            if (queue.metadata && queue.tracks.size > 0) {
-                const embed = {
-                    color: 0x00ff00,
-                    author: {
-                        name: 'Added to queue'
-                    },
-                    description: `[**${track.title}**](${track.url || 'https://example.com'})`,
-                    fields: [
-                        {
-                            name: 'Channel',
-                            value: track.author || 'Unknown',
-                            inline: true
-                        },
-                        {
-                            name: 'Duration',
-                            value: track.duration || 'Unknown',
-                            inline: true
-                        },
-                        {
-                            name: 'Position in queue',
-                            value: `${queue.tracks.size}`,
-                            inline: true
-                        }
-                    ],
-                    timestamp: new Date(),
-                    footer: {
-                        text: `Requested by ${track.requestedBy?.username || 'Unknown'}`
-                    }
-                };
-                queue.metadata.reply({ embeds: [embed] });
-            }
-
             // Update overlay queue
             if (bot.overlayServer) {
                 const currentTrack = queue.currentTrack;
@@ -88,7 +54,7 @@ module.exports = {
 
         // Additional logging events
         bot.player.events.on('audioTrackAdd', (queue, track) => {
-            console.log(chalk.blue(`Track added: ${track.title}`));
+            console.log(chalk.yellow(`Track added: ${track.title}`));
         });
 
         bot.player.events.on('emptyChannel', (queue) => {

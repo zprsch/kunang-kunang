@@ -76,7 +76,7 @@ class MusicBot {
         this.initTikTokBridge();
         
         // Initialize overlay server after TikTok bridge
-        console.log(chalk.blue('Initializing Overlay Server...'));
+        console.log('Initializing Overlay Server...');
         this.overlayServer.start();
         await this.delay(1000);
     }
