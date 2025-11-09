@@ -4,7 +4,7 @@ module.exports = {
     registerPlayerEvents(client, bot) {
         // Track start event - when a song starts playing
         bot.player.events.on('playerStart', (queue, track) => {
-            if (queue.metadata) {
+            if (queue.metadata && !queue.metadata.author.id.startsWith('tiktok_')) {
                 const embed = {
                     color: 0x2f3136,
                     author: {
@@ -43,9 +43,7 @@ module.exports = {
             }
         });
 
-        // Track add event
         bot.player.events.on('audioTrackAdd', (queue, track) => {
-            // Update overlay queue
             if (bot.overlayServer) {
                 const currentTrack = queue.currentTrack;
                 bot.overlayServer.updateStatus(currentTrack, queue);
@@ -75,7 +73,6 @@ module.exports = {
                 queue.metadata.reply({ embeds: [embed] });
             }
 
-            // Update overlay - no more tracks
             if (bot.overlayServer) {
                 console.log(chalk.blue('Updating overlay with queue finish'));
                 bot.overlayServer.updateStatus(null, queue);

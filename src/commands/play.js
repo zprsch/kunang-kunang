@@ -58,12 +58,44 @@ module.exports = {
                 }
             });
 
-            // Get current queue to calculate position
             const { useQueue } = require('discord-player');
             const queue = useQueue(message.guild.id);
             const queuePosition = queue ? queue.tracks.size + 1 : 1;
 
-            // Send track added message
+            if (message.author.id.startsWith('tiktok_')) {
+                const textChannel = message.guild.channels.cache.get(process.env.DISCORD_CHANNEL_ID);
+                if (textChannel) {
+                    const tiktokEmbed = {
+                        color: 0xff69b4, 
+                        author: {
+                            name: 'Track Added from TikTok'
+                        },
+                        description: `[**${track.title}**](${track.url || 'https://example.com'})`,
+                        fields: [
+                            {
+                                name: 'Requested by',
+                                value: `${message.author.username} (TikTok)`,
+                                inline: true
+                            },
+                            {
+                                name: 'Position in Queue',
+                                value: `${queuePosition}`,
+                                inline: true
+                            }
+                        ],
+                        thumbnail: {
+                            url: track.thumbnail || null
+                        },
+                        timestamp: new Date(),
+                        footer: {
+                            text: 'Kunang-Kunang • TikTok Integration'
+                        }
+                    };
+                    await textChannel.send({ embeds: [tiktokEmbed] });
+                }
+                return; 
+            }
+
             const successEmbed = {
                 color: 0x00ff00,
                 author: {
