@@ -278,19 +278,6 @@ module.exports = {
 
 </details>
 
-### Environment Variables (`.env`)
-
-```env
-# Discord Configuration (Required)
-DISCORD_BOT_TOKEN=your_discord_bot_token_here
-DISCORD_GUILD_ID=your_server_id_here
-DISCORD_VOICE_CHANNEL_ID=your_voice_channel_id_here
-
-# SoundCloud API credentials (Required)
-SOUNDCLOUD_CLIENT_ID=your_soundcloud_client_id
-SOUNDCLOUD_OAUTH_TOKEN=your_soundcloud_oauth_token
-```
-
 ## Project Structure
 
 ```
