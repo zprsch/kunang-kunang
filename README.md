@@ -374,18 +374,9 @@ bot.player.events.on('eventName', (queue, data) => {
 
 ### Planned Features
 
-- [ ] **Sending message when a command is triggered from TikTok**
+- [x] **Sending message when a command is triggered from TikTok**
+- [ ] **add other music platform**
 - [ ] **Make TikTok chat assistant**
-
-### Future Enhancements
-
-- [ ] **Web dashboard** for bot management
-- [ ] **Multi-server support** with separate configurations
-- [ ] **User preferences** and personalized playlists
-- [ ] **Advanced queue management** (shuffle, repeat modes)
-- [ ] **Voice commands** integration
-- [ ] **Lyrics display** for current tracks
-- [ ] **Music recommendations** based on listening history
 
 ---
 
@@ -411,8 +402,7 @@ For support and questions:
 
 <div align="center">
 
-**Built with love by [Kiznaiverr](https://github.com/Kiznaiverr)**
 
-*Kunang-Kunang - Bringing music communities together across platforms*
+**Kunang-Kunang bot music - adioss**
 
 </div>
