@@ -1,14 +1,15 @@
 /**
  * Kunang-Kunang Music Overlay
- * Polling-based overlay for OBS browser source
+ * Polling-based overlay for OBS browser source with preset support
  */
 
 class MusicOverlay {
     constructor() {
-        this.pollingInterval = 5000; // dont change default here, change in config.js
+        this.pollingInterval = 5000; // dont change here, change in config.js
         this.pollingId = null;
         this.lastData = null;
         this.isConnected = false;
+        this.currentPreset = 1; // Default preset
 
         this.init();
     }
@@ -22,14 +23,14 @@ class MusicOverlay {
     bindElements() {
         this.elements = {
             overlay: document.getElementById('overlay'),
-            statusIndicator: document.getElementById('status-indicator'),
-            currentTrack: document.getElementById('current-track'),
+            overlayContainer: document.getElementById('overlay-container'),
+            statusIndicator: document.querySelector('.status-indicator'),
             trackTitle: document.getElementById('track-title'),
             trackAuthor: document.getElementById('track-author'),
+            trackThumbnail: document.getElementById('track-thumbnail'),
             thumbnailImg: document.getElementById('thumbnail-img'),
             queueList: document.getElementById('queue-list'),
-            lastUpdate: document.getElementById('last-update'),
-            connectionStatus: document.getElementById('connection-status')
+            equalizer: document.querySelector('.equalizer')
         };
     }
 
@@ -62,12 +63,41 @@ class MusicOverlay {
                 this.restartPolling();
             }
 
+            // Update preset if changed
+            if (data.preset && data.preset !== this.currentPreset) {
+                this.updatePreset(data.preset);
+            }
+
             this.updateOverlay(data);
             this.updateConnectionStatus(true);
 
         } catch (error) {
             console.error('Failed to fetch overlay data:', error);
             this.updateConnectionStatus(false);
+        }
+    }
+
+    updatePreset(presetNumber) {
+        this.currentPreset = presetNumber;
+        
+        // Remove all preset classes
+        if (this.elements.overlayContainer) {
+            this.elements.overlayContainer.classList.remove('preset-1', 'preset-2', 'preset-3', 'preset-4');
+            
+            // Add the new preset class
+            this.elements.overlayContainer.classList.add(`preset-${presetNumber}`);
+            
+            // Dynamically load the preset CSS
+            this.loadPresetCSS(presetNumber);
+            
+            console.log(`Switched to preset ${presetNumber}`);
+        }
+    }
+
+    loadPresetCSS(presetNumber) {
+        const presetCssLink = document.getElementById('preset-css');
+        if (presetCssLink) {
+            presetCssLink.href = `css/preset${presetNumber}.css`;
         }
     }
 
@@ -82,11 +112,14 @@ class MusicOverlay {
     }
 
     updateNowPlaying(track, isPlaying) {
-        const statusIndicator = this.elements.statusIndicator;
+        const thumbnailElement = this.elements.trackThumbnail;
+        const equalizerElement = this.elements.equalizer;
+        const statusElement = this.elements.statusIndicator;
+        const overlayContainer = this.elements.overlayContainer;
 
         if (track) {
             this.elements.trackTitle.textContent = track.title || 'Unknown Track';
-            this.elements.trackAuthor.textContent = `by ${track.author || 'Unknown Artist'}`;
+            this.elements.trackAuthor.textContent = track.author || 'Unknown Artist';
 
             if (track.thumbnail) {
                 this.elements.thumbnailImg.src = track.thumbnail;
@@ -95,37 +128,79 @@ class MusicOverlay {
                 this.elements.thumbnailImg.style.display = 'none';
             }
 
-            statusIndicator.className = 'status-indicator';
-            if (isPlaying) {
-                statusIndicator.classList.add('playing');
-            } else {
-                statusIndicator.classList.add('paused');
+            // Update animations
+            if (thumbnailElement) {
+                if (isPlaying) {
+                    thumbnailElement.classList.add('playing');
+                } else {
+                    thumbnailElement.classList.remove('playing');
+                }
+            }
+
+            if (equalizerElement) {
+                if (isPlaying) {
+                    equalizerElement.classList.add('playing');
+                } else {
+                    equalizerElement.classList.remove('playing');
+                }
+            }
+
+            // Update overlay container for playing state
+            if (overlayContainer) {
+                if (isPlaying) {
+                    overlayContainer.classList.add('playing');
+                } else {
+                    overlayContainer.classList.remove('playing');
+                }
+            }
+
+            // Update status indicator for playing state
+            if (statusElement) {
+                if (isPlaying) {
+                    statusElement.classList.remove('connected', 'idle', 'disconnected');
+                    statusElement.classList.add('playing');
+                } else {
+                    statusElement.classList.remove('playing', 'idle', 'disconnected');
+                    statusElement.classList.add('connected');
+                }
             }
 
         } else {
             this.elements.trackTitle.textContent = 'No song playing';
             this.elements.trackAuthor.textContent = 'Add songs to the queue';
             this.elements.thumbnailImg.style.display = 'none';
-            statusIndicator.className = 'status-indicator';
-        }
-    }
+            
+            if (thumbnailElement) {
+                thumbnailElement.classList.remove('playing');
+            }
+            if (equalizerElement) {
+                equalizerElement.classList.remove('playing');
+            }
+            if (overlayContainer) {
+                overlayContainer.classList.remove('playing');
+            }
 
-    updateQueue(queue) {
+            // Update status indicator for idle state
+            if (statusElement) {
+                statusElement.classList.remove('connected', 'playing', 'disconnected');
+                statusElement.classList.add('idle');
+            }
+        }
+    }    updateQueue(queue) {
         const queueList = this.elements.queueList;
+        console.log('Updating queue display:', queue);
 
         if (!queue || queue.length === 0) {
-            queueList.innerHTML = '<div class="queue-item empty">No songs in queue</div>';
+            queueList.innerHTML = '<span class="queue-item-inline">No songs in queue</span>';
             return;
         }
 
-        const queueItems = queue.map((song, index) => `
-            <div class="queue-item">
-                <div class="title">${song.title || 'Unknown Track'}</div>
-                <div class="author">by ${song.author || 'Unknown Artist'}</div>
-            </div>
-        `).join('');
-
-        queueList.innerHTML = queueItems;
+        // Show only first 2 tracks inline with " • " separator
+        const queueText = queue.slice(0, 2).map(song => song.title || 'Unknown Track').join(' • ');
+        const moreCount = queue.length > 2 ? ` +${queue.length - 2} more` : '';
+        
+        queueList.innerHTML = `<span class="queue-item-inline">${queueText}${moreCount}</span>`;
+        console.log('Queue display updated:', queueText + moreCount);
     }
 
     updateLastUpdate(timestamp) {
@@ -138,14 +213,19 @@ class MusicOverlay {
 
     updateConnectionStatus(connected) {
         this.isConnected = connected;
-        const statusElement = this.elements.connectionStatus;
+        const statusElement = this.elements.statusIndicator;
 
-        if (connected) {
-            statusElement.textContent = 'Connected';
-            statusElement.style.color = '#4CAF50';
-        } else {
-            statusElement.textContent = 'Disconnected';
-            statusElement.style.color = '#f44336';
+        if (statusElement) {
+            // Remove all status classes
+            statusElement.classList.remove('connected', 'playing', 'idle', 'disconnected');
+            
+            if (connected) {
+                statusElement.classList.add('connected');
+                statusElement.style.display = 'block';
+            } else {
+                statusElement.classList.add('disconnected');
+                statusElement.style.display = 'block';
+            }
         }
     }
 
@@ -168,7 +248,8 @@ class MusicOverlay {
         return {
             isConnected: this.isConnected,
             lastData: this.lastData,
-            pollingInterval: this.pollingInterval
+            pollingInterval: this.pollingInterval,
+            currentPreset: this.currentPreset
         };
     }
 }

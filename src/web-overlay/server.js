@@ -38,9 +38,13 @@ class OverlayServer {
     setupRoutes() {
         // API endpoint for current status
         this.app.get('/api/nowplaying', (req, res) => {
+            // Get preset from config
+            const overlayPreset = config.overlay?.preset || 1;
+            
             res.json({
                 ...this.currentStatus,
-                pollingInterval: config.overlay.pollingInterval
+                pollingInterval: config.overlay.pollingInterval,
+                preset: overlayPreset
             });
         });
 
