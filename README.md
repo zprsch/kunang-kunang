@@ -374,6 +374,7 @@ bot.player.events.on('eventName', (queue, data) => {
 
 ### Planned Features
 
+- [ ] **Sending message when a command is triggered from TikTok**
 - [ ] **Make TikTok chat assistant**
 
 ### Future Enhancements
