@@ -17,10 +17,25 @@ module.exports = {
         return `[${progressText}${emptyText}]`;
     },
 
-    isValidURL(string) {
+    /**
+     * Check whether the given URL is valid.
+     *
+     * @param {string} str - The URL string.
+     * @returns {boolean} `true` if the given URL is valid; `false` otherwise.
+     */
+    isValidURL(str) {
+        if (typeof str !== 'string') return false;  // not a string is invalid
+        const trimmed = str.trim();
+        if (!trimmed) return false;  // empty string is invalid URL
         try {
-            new URL(string);
+            new URL(trimmed);
             return true;
+
+            // ? Should we just use this logic below?
+            // ? It provides better detection for HTTP and HTTPS protocols
+            // ? which is the valid for website URLs
+            // ---
+            // return url.protocol === 'http:' || url.protocol === 'https:';
         } catch (_) {
             return false;
         }
