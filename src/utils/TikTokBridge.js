@@ -98,7 +98,20 @@ class TikTokBridge {
      */
     async initializeConnection() {
         Logger.debug(`TikTokBridge: Creating WebcastPushConnection for @${this.config.username}`);
-        this.connection = new WebcastPushConnection(this.config.username);
+        
+        // Prepare connection options
+        const connectionOptions = {};
+        
+        // Add API key if available to avoid rate limiting
+        const signApiKey = process.env.TIKTOK_SIGN_API_KEY;
+        if (signApiKey) {
+            connectionOptions.signApiKey = signApiKey;
+            Logger.debug('TikTokBridge: Using Sign API key for connection');
+        } else {
+            Logger.debug('TikTokBridge: No Sign API key configured, using default connection (may be rate limited)');
+        }
+        
+        this.connection = new WebcastPushConnection(this.config.username, connectionOptions);
         this.setupEventHandlers();
         Logger.debug('TikTokBridge: Attempting to connect...');
         await this.connection.connect();

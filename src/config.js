@@ -24,10 +24,10 @@ module.exports = {
     },
     
     tiktok: {
-        username: '', 
+        username: 'mpl.id.officialreviewakunn', 
         maxReconnectAttempts: 3,
         reconnectDelay: 5000, 
-        enabled: false 
+      trueled: true 
     },
 
     overlay: {

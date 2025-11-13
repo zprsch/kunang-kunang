@@ -102,9 +102,38 @@ COMMAND_COOLDOWN=5000
 SOUNDCLOUD_CLIENT_ID=your_soundcloud_client_id
 SOUNDCLOUD_OAUTH_TOKEN=your_soundcloud_oauth_token
 
+# TikTok API Key (Optional - Recommended to avoid rate limiting)
+TIKTOK_SIGN_API_KEY=your_tiktok_api_key_here
+
 # Logging Configuration (Optional)
 LOG_LEVEL=info  # debug, info, success, warn, error, command, reply
 ```
+
+<details>
+<summary><strong>Getting TikTok Sign API Key (Optional - Recommended and its free)</strong></summary>
+
+**Note**: TikTok Sign API key is optional but highly recommended to avoid rate limiting issues.
+
+1. **Go to EulerStream website**
+   - Visit [https://www.eulerstream.com/pricing](https://www.eulerstream.com/pricing)
+   - Sign up for a free account
+
+2. **Get your free API key**
+   - After registration, you'll receive an API key
+   - This key allows higher connection limits and prevents rate limiting
+
+3. **Add to .env file**
+   ```env
+   TIKTOK_SIGN_API_KEY=your_api_key_here
+   ```
+
+**Benefits of using API key:**
+- Higher connection limits
+- No rate limiting issues
+- More reliable TikTok bridge connections
+- Better performance for frequent reconnections
+
+</details>
 
 <details>
 <summary><strong>Getting SoundCloud API Credentials</strong></summary>
@@ -228,6 +257,15 @@ The bot logs activities across multiple components:
 2. **Monitor Chat**: Listens for commands in TikTok live chat
 3. **Execute Commands**: Processes commands and controls Discord music bot
 4. **Cross-platform Control**: TikTok viewers can control Discord music
+
+### Rate Limiting & API Key
+
+**Important**: Without an API key, you may encounter rate limiting errors like:
+```
+Connection failed: [Rate Limited] (rate_limit_room_id_day) Too many connections started, try again later.
+```
+
+To avoid this, get a free API key from [EulerStream](https://www.eulerstream.com/pricing) and add it to your `.env` file as `TIKTOK_SIGN_API_KEY`.
 
 ### Supported Commands from TikTok
 
