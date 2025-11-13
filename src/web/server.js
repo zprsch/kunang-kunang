@@ -2,6 +2,7 @@ const express = require("express");
 const path = require("path");
 const fs = require("fs");
 const config = require("../config");
+const { Logger } = require("../utils/logging")
 
 class OverlayServer {
   constructor(bot) {
@@ -142,19 +143,19 @@ class OverlayServer {
 
   start(port = config.overlay.port) {
     if (!config.overlay.enabled) {
-      console.log("Overlay server disabled in config");
+      Logger.warn("Overlay server disabled in config");
       return false;
     }
 
     try {
       this.server = this.app.listen(port, () => {
-        console.log(`Overlay server running on http://localhost:${port}`);
+        Logger.info(`Overlay server running on http://localhost:${port}`);
         // console.log(`Polling interval: ${config.overlay.pollingInterval}ms`);
         // console.log(`Max queue display: ${config.overlay.maxQueueDisplay} songs`);
       });
       return true;
     } catch (error) {
-      console.error("Failed to start overlay server:", error.message);
+      Logger.error("Failed to start overlay server:", error.message);
       return false;
     }
   }
@@ -162,7 +163,7 @@ class OverlayServer {
   stop() {
     if (this.server) {
       this.server.close();
-      console.log("Overlay server stopped");
+      Logger.info("Overlay server stopped");
     }
   }
 
