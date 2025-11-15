@@ -1,8 +1,9 @@
-import { useMainPlayer, useQueue } from 'discord-player';
+import { useMainPlayer, useQueue, SearchResult, Track } from 'discord-player';
 import { Message, EmbedBuilder, TextChannel } from 'discord.js';
 import config from '../config.js';
 import { Logger } from '../utils/logging.js';
 import { Command } from '../types/command.js';
+import { SoundCloudExtractor } from '../extractors/SoundCloudExtractor.js';
 
 const playCommand: Command = {
     name: 'play',
@@ -46,8 +47,34 @@ const playCommand: Command = {
 
             Logger.debug(`Search completed, found ${searchResult?.tracks?.length || 0} tracks`, 'PlayCommand');
 
+            let finalSearchResult: SearchResult | null = searchResult;
+            let tracksToPlay: Track[] = [];
+
+            // Fallback to SoundCloud if YouTube search failed
             if (!searchResult || !searchResult.tracks.length) {
-                Logger.debug('No search results found', 'PlayCommand');
+                Logger.debug('YouTube search failed, trying SoundCloud fallback...', 'PlayCommand');
+                try {
+                    const soundcloudExtractor = new (SoundCloudExtractor as any)(player.extractors.context, {});
+                    await soundcloudExtractor.activate();
+                    const soundcloudResult = await soundcloudExtractor.handle(query, {
+                        requestedBy: message.author as any
+                    });
+                    
+                    if (soundcloudResult && soundcloudResult.tracks.length > 0) {
+                        Logger.debug(`SoundCloud fallback successful, found ${soundcloudResult.tracks.length} tracks`, 'PlayCommand');
+                        tracksToPlay = soundcloudResult.tracks;
+                        finalSearchResult = null; // indicate using tracks array
+                    } else {
+                        Logger.debug('SoundCloud fallback also failed', 'PlayCommand');
+                    }
+                } catch (fallbackError) {
+                    const fallbackErrorMsg = fallbackError instanceof Error ? fallbackError.message : String(fallbackError);
+                    Logger.debug(`SoundCloud fallback error: ${fallbackErrorMsg}`, 'PlayCommand');
+                }
+            }
+
+            if ((!finalSearchResult && tracksToPlay.length === 0) || (finalSearchResult && finalSearchResult.tracks.length === 0)) {
+                Logger.debug('No search results found from any extractor', 'PlayCommand');
                 const noResultEmbed = new EmbedBuilder()
                     .setColor(0xff0000)
                     .setDescription(`**No results found for:** \`${query}\``)
@@ -55,7 +82,7 @@ const playCommand: Command = {
                 return message.reply({ embeds: [noResultEmbed] });
             }
 
-            const { track } = await player.play(message.member.voice.channel as any, searchResult, {
+            const { track } = await player.play(message.member.voice.channel as any, finalSearchResult || tracksToPlay, {
                 nodeOptions: {
                     metadata: message,
                     ...config.player.leaveOptions

@@ -10,8 +10,8 @@ class YouTubeExtractor extends BaseExtractor {
     }
 
     async validate(query: string): Promise<boolean> {
-        const isValid = this.isYouTubeURL(query);
-        Logger.debug(`YouTubeExtractor: Validating query "${query?.substring(0, 50)}${query?.length > 50 ? '...' : ''}" - ${isValid ? 'valid YouTube URL' : 'not a YouTube URL'}`);
+        const isValid = typeof query === 'string' && query.length > 0;
+        Logger.debug(`YouTubeExtractor: Validating query "${query?.substring(0, 50)}${query?.length > 50 ? '...' : ''}" - ${isValid ? 'valid query' : 'invalid query'}`);
         return isValid;
     }
 
@@ -39,6 +39,9 @@ class YouTubeExtractor extends BaseExtractor {
                 if (searchData && searchData.result && searchData.result.videos) {
                     tracks = searchData.result.videos.slice(0, 10).map((video: any) => this.convertToTrackData(video));
                     Logger.debug(`YouTubeExtractor: Search returned ${tracks.length} videos`);
+                    
+                    // Add delay after search to ensure data stability
+                    await new Promise(resolve => setTimeout(resolve, 100));
                 } else {
                     Logger.debug('YouTubeExtractor: No search results found');
                 }
@@ -121,7 +124,7 @@ class YouTubeExtractor extends BaseExtractor {
     }
 
     isYouTubeURL(url: string): boolean {
-        const youtubeUrlRegex = /^https?:\/\/(www\.)?(youtube\.com\/watch\?v=[^&\n?#]+|youtu\.be\/[^&\n?#]+|youtube\.com\/embed\/[^&\n?#]+|youtube\.com\/v\/[^&\n?#]+)/;
+        const youtubeUrlRegex = /^https?:\/\/(www\.|m\.|music\.)?youtube\.com\/(watch\?v=[^&\n?#]+|embed\/[^&\n?#]+|v\/[^&\n?#]+|shorts\/[^&\n?#]+)|https?:\/\/youtu\.be\/[^&\n?#]+/;
         return youtubeUrlRegex.test(url);
     }
 
