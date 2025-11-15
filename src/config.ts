@@ -31,7 +31,7 @@ export default {
     },
 
     overlay: {
-        enabled: false,
+        enabled: true,
         port: 3000,
         pollingInterval: 1000, 
         maxQueueDisplay: 3,     
