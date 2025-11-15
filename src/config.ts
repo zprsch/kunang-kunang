@@ -24,10 +24,10 @@ export default {
     },
     
     tiktok: {
-        username: 'andikindang18', 
+        username: '', 
         maxReconnectAttempts: 3,
         reconnectDelay: 5000, 
-        enabled: true
+        enabled: false
     },
 
     overlay: {
