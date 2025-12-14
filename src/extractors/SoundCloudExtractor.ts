@@ -23,13 +23,21 @@ class SoundCloudExtractor extends BaseExtractor {
             return false;
         }
         
+        // Accept SoundCloud URLs
         if (this.isSoundCloudURL(query)) {
             Logger.debug('SoundCloudExtractor: Query validation passed - SoundCloud URL detected');
             return true;
         }
         
-        Logger.debug('SoundCloudExtractor: Query validation failed - not a SoundCloud URL');
-        return false; // Only accept SoundCloud URLs, let YouTube handle general searches
+        // Accept search queries (non-URLs)
+        const isUrl = /^https?:\/\//.test(query);
+        if (!isUrl) {
+            Logger.debug('SoundCloudExtractor: Query validation passed - search query detected');
+            return true;
+        }
+        
+        Logger.debug('SoundCloudExtractor: Query validation failed - URL from another platform');
+        return false;
     }
 
     async handle(query: string, context: ExtractorSearchContext): Promise<ExtractorInfo> {
